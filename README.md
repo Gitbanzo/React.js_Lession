@@ -409,7 +409,7 @@ export default App;
 - チェックボックスを配置して完了/未完了の切り替えが出来る事。
 - ボタンで完了済み、未完了一覧の表示切り替えが出来る事
 
-![](./TODO_App.gif)
+![](https://raw.githubusercontent.com/Gitbanzo/React.js_Lession/master/TODO_APP.gif)
 
 
 ## STEP5.Reduxを使ってみよう
