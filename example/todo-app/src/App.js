@@ -28,7 +28,6 @@ class App extends Component {
     this._onDone = this._onDone.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
     this._onDelete = this._onDelete.bind(this);
-    this._todosToMap = this._todosToMap.bind(this);
   }
 
   _onSubmit(todo) {
@@ -39,25 +38,24 @@ class App extends Component {
     this.setState({todos: newTodos});
   }
 
-  _onDone(value) {
-    const todos = this._todosToMap(value, (todo) => {
-      todo.done = !todo.done;
+  _onDone(id) {
+    const todos = this.state.todos.map(todo => {
+      if(todo.id === Number(id)){
+       todo.done = !todo.done;
+      }
       return todo;
     });
     this.setState(todos);
   }
 
-  _onDelete(value) {
-    const todos = this._todosToMap(value, (todo) => {
-      todo.disabled = !todo.disabled;
+  _onDelete(id) {
+    const todos = this.state.todos.map(todo => {
+      if(todo.id === Number(id)){
+       todo.disabled = !todo.disabled;
+      }
       return todo;
     });
     this.setState(todos);
-  }
-
-  _todosToMap(id, toMap) {
-    const todos = this.state.todos.filter(todo => todo.id === Number(id)).map(todo => toMap(todo));
-    return this.state.todos.filter(todo => todo.id !== Number(id)).concat(todos);
   }
 
   render() {
