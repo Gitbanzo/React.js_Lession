@@ -2,64 +2,36 @@ import React, {Component} from 'react';
 import Form from './components/Form';
 import Table from './components/Table';
 
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+import * as actions from './actions/TodoAction'
+
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      todos: [
-        {
-          id: 1,
-          title: 'React.js学習する',
-          done: false,
-          disabled: false
-        }, {
-          id: 2,
-          title: 'Fluxとはなんぞや？',
-          done: true,
-          disabled: false
-        }, {
-          id: 3,
-          title: 'Reduxだと？',
-          done: false,
-          disabled: false
-        }
-      ]
-    }
     this._onDone = this._onDone.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
     this._onDelete = this._onDelete.bind(this);
   }
 
+  componentWillMount() {
+    this.props.actions.fetch();
+  }
+
   _onSubmit(todo) {
-    const {todos} = this.state;
-    const newTodos = todos.concat([Object.assign({}, todo, {
-        id: (todos.length + 1)
-      })]);
-    this.setState({todos: newTodos});
+    this.props.actions.create(todo);
   }
 
   _onDone(id) {
-    const todos = this.state.todos.map(todo => {
-      if(todo.id === Number(id)){
-       todo.done = !todo.done;
-      }
-      return todo;
-    });
-    this.setState(todos);
+    this.props.actions.done(id);
   }
 
   _onDelete(id) {
-    const todos = this.state.todos.map(todo => {
-      if(todo.id === Number(id)){
-       todo.disabled = !todo.disabled;
-      }
-      return todo;
-    });
-    this.setState(todos);
+    this.props.actions.destory(id);
   }
 
   render() {
-    const {todos} = this.state;
+    const {todos} = this.props;
     return (
       <div className="container">
         <div className="row">
@@ -77,4 +49,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({todos: state.todos});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
