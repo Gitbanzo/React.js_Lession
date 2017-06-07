@@ -677,10 +677,196 @@ SETP5では取得の処理しかありません。下記アクションを追加
 ## STEP6.Reduxを学ぼう
 __この学習は演習①TODOアプリを修正しますので、Gitブランチ切るとよいです。__
 
+### Constantsの作成
+
+`src/constants`ディレクトリの作成をし、`TodoTypes.js`を作成する。
+
+```diff
++ export const TODO_FETCH = '@@todo/FETCH';
+```
+
+### Reducerの作成
+
+`src/reducers`ディレクトリの作成をし、`Todo.js`を作成する。
+
+```diff
++ import * as types from '../constants/TodoTypes';
++ 
++ const initialState = {
++   todos: []
++ };
++ 
++ const todo = (state = initialState, action) => {
++   switch (action.type) {
++     case types.TODO_FETCH:
++       return Object.assign({}, state, {todos: action.values});
++     default:
++       return state;
++   }
++ };
++ 
++ export default todo;
+
+```
+
+### ActionCreatorの作成
+
+`src/services`ディレクトリの作成をし、`TodoApiClient.js`を作成する。
+
+__※ 実際はAPIアクセスを行う__
+
+```diff
++ export default {
++   fetch() {
++     return {
++       data: [
++         {
++           id: 1,
++           title: 'React.js学習する',
++           done: false,
++           disabled: false
++         }, {
++           id: 2,
++           title: 'Fluxとはなんぞや？',
++           done: true,
++           disabled: false
++         }, {
++           id: 3,
++           title: 'Reduxだと？',
++           done: false,
++           disabled: false
++         }
++       ]
++     }
++   }
++ };
+```
+
+### Actionの作成
+
+`src/actions`ディレクトリの作成をし、`TodoAction.js`を作成する。
+
+```diff
++ import * as types from '../constants/TodoTypes';
++ import TodoApiClient from '../services/TodoApiClient';
++ 
++ export const fetch = () => {
++   return {type: types.TODO_FETCH, values: TodoApiClient.fetch().data};
++ };
+
+```
+
+### Viewの作成
+
+`src/App.js`を修正する。
+
+```diff
+import React, {Component} from 'react';
+import Form from './components/Form';
+import Table from './components/Table';
+
++ import {bindActionCreators} from 'redux'
++ import {connect} from 'react-redux'
++ import * as actions from './actions/TodoAction'
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+-     todos: [
+-         {
+-           id: 1,
+-           title: 'React.js学習する',
+-           done: false,
+-           disabled: false
+-         }, {
+-           id: 2,
+-           title: 'Fluxとはなんぞや？',
+-           done: true,
+-           disabled: false
+-         }, {
+-           id: 3,
+-           title: 'Reduxだと？',
+-           done: false,
+-           disabled: false
+-         }
+-       ]
+-     }
+    this._onDone = this._onDone.bind(this);
+    this._onSubmit = this._onSubmit.bind(this);
+    this._onDelete = this._onDelete.bind(this);
+  }
+
++  componentWillMount() {
++    this.props.actions.fetch();
++  }
+
+  _onSubmit(todo) {
+    const {todos} = this.state;
+    const newTodos = todos.concat([Object.assign({}, todo, {
+        id: (todos.length + 1)
+      })]);
+    this.setState({todos: newTodos});
+  }
+
+  _onDone(id) {
+    const todos = this.state.todos.map(todo => {
+      if (todo.id === Number(id)) {
+        todo.done = !todo.done;
+      }
+      return todo;
+    });
+    this.setState(todos);
+  }
+
+  _onDelete(id) {
+    const todos = this.state.todos.map(todo => {
+      if (todo.id === Number(id)) {
+        todo.disabled = !todo.disabled;
+      }
+      return todo;
+    });
+    this.setState(todos);
+  }
+
+  render() {
+    const {todos} = this.props;
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-8">
+            <blockquote>
+              <h1>ADD TODO</h1>
+            </blockquote>
+            <Form onSubmit={this._onSubmit}/>
+            <hr/>
+            <Table todos={todos} onDone={this._onDone} onDelete={this._onDelete}/>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
++ const mapStateToProps = state => ({todos: state.todos});
+
++ const mapDispatchToProps = dispatch => ({
++   actions: bindActionCreators(actions, dispatch)
++ });
+
++ export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+```
+
+## 演習③ :Reduxを導入したTODOアプリのアクションの追加をする。
+
+SETP6では取得の処理しかありません。下記アクションを追加しましょう。
+- 登録の処理
+- 削除の処理
+- 完了/未完了の切替
+
 
 ## Example
 
 - 演習①
-
-
 
