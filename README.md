@@ -421,7 +421,19 @@ __この学習は演習①TODOアプリを修正しますので、Gitブラン�
 
 このSTEP5は、FluxUtilsを使用したパターンです。
 
-fluxのインストールをする
+
+### Fluxとは？
+
+Github([facebook/flux](https://github.com/facebook/flux))のTopに
+> An application architecture for React utilizing a unidirectional data flow.
+
+訳すと、
+>__単方向データフローを利用したReactのためのアプリケーションアーキテクチャ。__
+
+とあります。
+
+
+### fluxのインストールをする
 
 ```
 $ npm i -S flux
@@ -450,7 +462,7 @@ Keymirrorのインストールをする
 $ npm i -S keymirror
 ```
 
-`sr/constants`ディレクトリを作成し、`TodoConstants.js`を作成する。
+`src/constants`ディレクトリを作成し、`TodoConstants.js`を作成する。
 
 ```diff
 + import keyMirror from 'keymirror';
@@ -464,7 +476,7 @@ $ npm i -S keymirror
 
 ### Storeの作成
 
-`sr/stores`ディレクトリを作成し、`TodoStore.js`を作成する。
+`src/stores`ディレクトリを作成し、`TodoStore.js`を作成する。
 
 ```diff
 + import {ReduceStore} from 'flux/utils';
@@ -500,7 +512,7 @@ $ npm i -S keymirror
 
 ### ActionCreatorの作成
 
-`sr/services`ディレクトリを作成し、`TodoApiClient.js`を作成する。
+`src/services`ディレクトリを作成し、`TodoApiClient.js`を作成する。
 
 ```diff
 +/*
