@@ -421,7 +421,19 @@ __この学習は演習①TODOアプリを修正しますので、Gitブラン�
 
 このSTEP5は、FluxUtilsを使用したパターンです。
 
-fluxのインストールをする
+
+### Fluxとは？
+
+Github([facebook/flux](https://github.com/facebook/flux))のTopに
+> An application architecture for React utilizing a unidirectional data flow.
+
+訳すと、
+>__単方向データフローを利用したReactのためのアプリケーションアーキテクチャ。__
+
+とあります。
+
+
+### fluxのインストールをする
 
 ```
 $ npm i -S flux
@@ -450,7 +462,7 @@ Keymirrorのインストールをする
 $ npm i -S keymirror
 ```
 
-`sr/constants`ディレクトリを作成し、`TodoConstants.js`を作成する。
+`src/constants`ディレクトリを作成し、`TodoConstants.js`を作成する。
 
 ```diff
 + import keyMirror from 'keymirror';
@@ -464,7 +476,7 @@ $ npm i -S keymirror
 
 ### Storeの作成
 
-`sr/stores`ディレクトリを作成し、`TodoStore.js`を作成する。
+`src/stores`ディレクトリを作成し、`TodoStore.js`を作成する。
 
 ```diff
 + import {ReduceStore} from 'flux/utils';
@@ -500,7 +512,7 @@ $ npm i -S keymirror
 
 ### ActionCreatorの作成
 
-`sr/services`ディレクトリを作成し、`TodoApiClient.js`を作成する。
+`src/services`ディレクトリを作成し、`TodoApiClient.js`を作成する。
 
 ```diff
 +/*
@@ -756,6 +768,34 @@ __※ 実際はAPIアクセスを行う__
 
 ```
 
+### Storeの作成
+
+`src/index.js`を修正する。
+
+```diff
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+import './index.css';
+
++ import {createStore, applyMiddleware} from 'redux';
++ import {Provider} from 'react-redux'
++ import reducer from './reducers/Todo'
+
++ const store = createStore(reducer);
+
+- ReactDOM.render(<App/>, document.getElementById('root'));
++ ReactDOM.render(
++  <Provider store={store}>
++   <App/>
++  </Provider>, document.getElementById('root'));
+
+
+registerServiceWorker();
+
+```
+
 ### Viewの作成
 
 `src/App.js`を修正する。
@@ -868,5 +908,8 @@ SETP6では取得の処理しかありません。下記アクションを追加
 
 ## Example
 
-- 演習①
+- 演習① :[todo-app](https://github.com/Gitbanzo/React.js_Lession/tree/master/example/todo-app)
+- 演習② :[flux-todo-app](https://github.com/Gitbanzo/React.js_Lession/tree/master/example/flux-todo-app)
+- 演習③ :[redux-todo-app](https://github.com/Gitbanzo/React.js_Lession/tree/master/example/redux-todo-app)
+
 
